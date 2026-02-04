@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bingo Master</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-midnight">
+
+    <div class="bg-pattern-layer"></div>
+
+    <div class="glass-panel">
+        
+        <div class="panel-header">
+            <button class="icon-btn" onclick="app.goHome()" title="Home">
+                <i class="fas fa-home"></i>
+            </button>
+            
+            <div class="theme-toggles">
+                <div class="dot sage" data-theme="theme-sage"></div>
+                <div class="dot midnight" data-theme="theme-midnight"></div>
+                <div class="dot peach" data-theme="theme-peach"></div>
+            </div>
+        </div>
+
+        <div id="screen-home" class="screen active">
+            <div class="logo-container">
+                <h1>BINGO! <span>MASTER</span></h1>
+            </div>
+            
+            <div class="menu-stack">
+                <button class="btn" onclick="app.setupSolo()">Solo Mode</button>
+                <button class="btn" onclick="app.setupOffline()">Offline</button>
+                <button class="btn" onclick="app.setupOnline()">Online</button>
+            </div>
+        </div>
+
+        <div id="screen-config" class="screen">
+            <div class="nav-header">
+                <h2 id="config-title">Setup Game</h2>
+            </div>
+
+            <div id="config-online-name" class="input-group" style="display:none; width:100%; margin-top:10px;">
+                <label style="display:block; margin-bottom:5px; font-size:0.9rem; opacity:0.8;">Display Name</label>
+                <input type="text" id="player-name" placeholder="Enter Name">
+            </div>
+
+            <div id="config-solo-opts" class="config-section" style="display:none; width:100%;">
+                <div class="setting-row" style="text-align:center; margin-bottom:15px;">
+                    <span style="font-size:1.1rem; font-weight:600;">Opponents</span>
+                    <select id="bot-count" style="margin-top:10px; width:100%; padding:10px; border-radius:8px;">
+                        <option value="1">1 Bot</option>
+                        <option value="2">2 Bots</option>
+                        <option value="3">3 Bots</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="config-online-opts" class="config-section" style="display:none; width:100%;">
+                <div class="tab-switcher" style="margin: 15px 0; display:flex; gap:10px;">
+                    <button class="btn" style="padding:10px; font-size:0.9rem;" onclick="app.toggleOnlineTab('create')">Create</button>
+                    <button class="btn" style="padding:10px; font-size:0.9rem; background:transparent; border:1px solid currentColor;" onclick="app.toggleOnlineTab('join')">Join</button>
+                </div>
+
+                <div id="tab-create" class="tab-content">
+                    <div class="setting-row" style="text-align:center;">
+                        <span style="font-size:1.1rem; font-weight:600;">Max Players</span>
+                        <select id="online-limit" style="margin-top:10px; width:100%; padding:10px; border-radius:8px;">
+                            <option value="2">2 Players</option>
+                            <option value="3">3 Players</option>
+                            <option value="4">4 Players</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="tab-join" class="tab-content" style="display:none;">
+                    <input type="text" id="room-code-input" placeholder="Enter Room Code">
+                </div>
+            </div>
+
+            <button class="btn" style="margin-top:20px;" onclick="app.submitConfig()">Start Game</button>
+        </div>
+
+        <div id="screen-lobby" class="screen">
+            <div class="nav-header">
+                <h2>Room: <span id="lobby-code" style="color:var(--primary);">---</span></h2>
+            </div>
+            
+            <div class="lobby-status" style="text-align:center; margin:20px 0;">
+                <p id="lobby-msg" style="opacity: 0.7;">Waiting for players...</p>
+                <h3 id="lobby-count" style="font-size:2rem; margin:10px 0;">1 / 2</h3>
+            </div>
+
+            <div class="player-list" id="lobby-list" style="width:100%; max-height:200px; overflow-y:auto; margin-bottom:20px;"></div>
+
+            <button id="btn-start-online" class="btn" onclick="game.startOnlineGame()">Start Match</button>
+        </div>
+
+        <div id="screen-setup" class="screen">
+            <h2>Fill Your Board</h2>
+            <div class="setup-status" style="margin-bottom:10px;">
+                <span>Place Number: <b id="fill-num" style="font-size:1.5rem; color:var(--primary);">1</b></span>
+            </div>
+            
+            <div class="grid-container" id="setup-grid"></div>
+
+            <div class="controls-row" style="display:flex; gap:10px; width:100%; margin-top:10px;">
+                <button class="btn" style="flex:1; font-size:0.9rem;" onclick="game.undoFill()">Undo</button>
+                <button class="btn" id="btn-swap" style="flex:1; font-size:0.9rem;" onclick="game.toggleSwapMode()">Swap</button>
+                <button class="btn" style="flex:1; font-size:0.9rem;" onclick="game.randomizeBoard()">Random</button>
+            </div>
+        </div>
+
+        <div id="screen-game" class="screen">
+	<div id="mode-badge" class="badge">SOLO</div>
+            <div class="game-header" style="width:100%;">
+                <div class="bingo-bar">
+                    <span id="let-B">B</span>
+                    <span id="let-I">I</span>
+                    <span id="let-N">N</span>
+                    <span id="let-G">G</span>
+                    <span id="let-O">O</span>
+                </div>
+            </div>
+
+            <div class="turn-indicator" id="turn-msg" style="margin:10px 0; font-weight:bold;">Game Started</div>
+            
+            <div class="grid-container" id="game-grid"></div>
+        </div>
+
+    </div> 
+
+<div id="result-modal" class="modal">
+    <div class="modal-card">
+        <h1 class="rainbow-text">BINGO!</h1>
+        <div id="final-scores" class="score-list" style="margin-bottom:20px;">
+            </div>
+        <button class="btn" onclick="app.goHome()">Back to Menu</button>
+    </div>
+</div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, update, onChildAdded, remove } 
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDKo25PpBaCyroceHpHCe5WvSUyhY-nnHU",
+            authDomain: "bingo-a502c.firebaseapp.com",
+            databaseURL: "https://bingo-a502c-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "bingo-a502c",
+            storageBucket: "bingo-a502c.firebasestorage.app",
+            messagingSenderId: "979136210306",
+            appId: "1:979136210306:web:9f4842d799f8e694db5b9b",
+            measurementId: "G-BE9F5XDXL3"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const db = getDatabase(app);
+            window.db = db;
+            window.dbRef = ref;
+            window.dbSet = set;
+            window.dbPush = push;
+            window.dbUpdate = update;
+            window.dbOnValue = onValue;
+            window.dbOnChildAdded = onChildAdded;
+            window.dbRemove = remove;
+            console.log("Firebase Connected");
+        } catch (e) {
+            console.error("Firebase Connection Failed:", e);
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="script.js"></script>
+    <script src="animations.js"></script>
+</body>
+</html>

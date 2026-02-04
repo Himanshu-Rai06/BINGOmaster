@@ -1,0 +1,393 @@
+/* =========================================
+   1. GLOBAL & FONTS
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
+
+:root {
+    --font-main: 'Outfit', sans-serif;
+    --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    font-family: var(--font-main);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
+    color: var(--text);
+    transition: background-color 0.8s ease, color 0.5s ease;
+}
+
+/* Background Animation Layer */
+.bg-pattern-layer {
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    z-index: -1;
+    background: var(--bg-pattern);
+    background-size: var(--bg-size, 100% 100%);
+    animation: var(--bg-anim, none);
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* =========================================
+   2. THEME DEFINITIONS
+   ========================================= */
+
+/* 🍑 PEACH SUNSET */
+.theme-peach {
+    --bg-color: #ff9a9e;
+    --bg-pattern: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4), transparent 60%),
+                  conic-gradient(from 0deg at 50% 50%, #ff9a9e, #fad0c4, #ffd1ff, #a18cd1, #ff9a9e);
+    --bg-size: 150% 150%;
+    --bg-anim: spinSlow 30s linear infinite;
+
+    --glass-bg: rgba(255, 255, 255, 0.55);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.7);
+    --glass-shadow: 0 15px 35px rgba(255, 100, 100, 0.2);
+
+    --primary: #FF6B6B; 
+    --accent: #FFD93D;
+    --text: #2d3436;
+    
+    --tile-bg: rgba(255, 255, 255, 0.7);
+    --tile-radius: 12px;
+    --btn-radius: 50px;
+}
+
+/* 🌙 MIDNIGHT DREAM */
+.theme-midnight {
+    --bg-color: #020617;
+    --bg-pattern: radial-gradient(white, rgba(255,255,255,.2) 1px, transparent 2px),
+                  radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 2px);
+    --bg-size: 500px 500px, 300px 300px;
+    --bg-anim: drift 60s linear infinite;
+    
+    --glass-bg: rgba(15, 23, 42, 0.85);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 0 50px rgba(0,0,0,0.8);
+
+    --primary: #6366f1; 
+    --accent: #a855f7;
+    --text: #f8fafc;
+    
+    --tile-bg: rgba(255, 255, 255, 0.05);
+    --tile-radius: 8px;
+    --btn-radius: 12px;
+}
+
+/* 🍵 MATCHA LATTE */
+.theme-sage {
+    --bg-color: #e3e7e0;
+    --bg-pattern: none; 
+    --bg-anim: none;
+
+    --glass-bg: #f0f2ef;
+    --glass-border: 2px solid #d4d8d2;
+    --glass-shadow: 15px 15px 0px rgba(89, 100, 89, 0.15);
+
+    --primary: #5c7060;
+    --accent: #8FA392;
+    --text: #3e4e40;
+    
+    --tile-bg: #ffffff;
+    --tile-radius: 4px;
+    --btn-radius: 6px;
+}
+
+/* =========================================
+   3. MAIN LAYOUT (The Glass Card)
+   ========================================= */
+
+.glass-panel {
+    width: 90%; 
+    max-width: 400px;
+    /* Removed min-height so it doesn't force whitespace */
+    height: auto;
+    
+    display: flex; 
+    flex-direction: column;
+    
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: var(--glass-border);
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: var(--glass-shadow);
+    
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+/* =========================================
+   4. HEADER (Home & Themes)
+   ========================================= */
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Home Icon Button */
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.icon-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Theme Dots Wrapper */
+.theme-toggles {
+    display: flex;
+    gap: 8px;
+    padding: 6px 10px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 20px;
+}
+
+.dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.3);
+    transition: transform 0.2s;
+}
+.dot:hover { transform: scale(1.2); }
+
+.dot.sage { background: #5c7060; }
+.dot.midnight { background: #0f172a; }
+.dot.peach { background: #FF6B6B; }
+
+
+/* =========================================
+   5. SCREENS (Menu & Game)
+   ========================================= */
+
+.screen {
+    display: none; 
+    flex-direction: column; 
+    width: 100%;
+    align-items: center;
+    animation: fadeUp 0.4s var(--ease-elastic);
+}
+
+.screen.active { display: flex; }
+
+/* Main Menu Screen */
+#view-home {
+    justify-content: center;
+    padding: 20px 0;
+}
+
+/* Game Screen */
+#view-game {
+    width: 100%;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   6. UI COMPONENTS
+   ========================================= */
+
+h1 { 
+    font-weight: 900; font-size: 3rem; line-height: 1;
+    text-align: center; color: var(--primary); 
+    letter-spacing: -2px; margin-bottom: 5px;
+    text-transform: uppercase;
+}
+h1 span {
+    display: block; font-size: 0.8rem; letter-spacing: 4px;
+    font-weight: 600; opacity: 0.6; margin-top: 5px; color: var(--text);
+}
+
+.menu-stack {
+    display: flex; flex-direction: column;
+    width: 100%; gap: 12px;
+    margin-top: 30px;
+}
+
+.btn {
+    width: 100%; padding: 14px; 
+    border: none; border-radius: var(--btn-radius);
+    background: var(--primary); color: white;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer; 
+    transition: transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.btn:active { transform: scale(0.96); }
+
+/* Theme Specific Button Styles */
+.theme-midnight .btn { 
+    background: transparent; border: 1px solid var(--primary); color: var(--primary); 
+}
+.theme-midnight .btn:hover { 
+    background: var(--primary); color: white; box-shadow: 0 0 15px var(--primary); 
+}
+
+/* Inputs */
+input {
+    width: 100%; padding: 12px; 
+    border: 2px solid rgba(0,0,0,0.1);
+    border-radius: 10px; background: rgba(255,255,255,0.4);
+    text-align: center; font-family: inherit; font-size: 1rem;
+    color: var(--text); outline: none; margin-bottom: 10px;
+}
+input:focus { border-color: var(--primary); background: rgba(255,255,255,0.9); }
+
+/* =========================================
+   7. BINGO GRID
+   ========================================= */
+   
+.grid-container {
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px; 
+    width: 100%; 
+    margin: 15px 0;
+}
+
+.tile {
+    aspect-ratio: 1/1; 
+    background: var(--tile-bg);
+    border-radius: var(--tile-radius);
+    display: flex; justify-content: center; align-items: center;
+    font-weight: 700; font-size: 1rem; color: var(--text);
+    cursor: pointer; user-select: none;
+    transition: 0.2s;
+}
+
+.tile.marked { background: var(--primary); color: white; }
+
+.theme-midnight .tile.marked { 
+    box-shadow: 0 0 10px var(--primary); 
+    border: 1px solid var(--accent); 
+}
+
+/* =========================================
+   8. UTILITIES
+   ========================================= */
+
+/* Use this class to hide the old "Back to Menu" button in your HTML */
+.hidden {
+    display: none !important;
+}
+
+/* Animations */
+@keyframes spinSlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes drift { 0% { background-position: 0 0, 0 0; } 100% { background-position: 1000px 500px, 400px 600px; } }
+
+
+
+.badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-card {
+    background: var(--surface);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal.show .modal-card {
+    transform: scale(1);
+}
+
+.rainbow-text {
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    background-size: 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbow 10s linear infinite;
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+
+@keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 400% 50%; }
+}
+
+/* Update your .screen class */
+.screen {
+    /* ... your existing layout styles ... */
+    
+    /* NEW STYLES FOR ANIMATION */
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px); /* Glass effect */
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    
+    /* Ensure the explosion doesn't get clipped */
+    overflow: visible; 
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+}
+
+/* Ensure the grenade doesn't trigger scrollbars */
+body {
+    overflow-x: hidden;
+    /* ... existing styles ... */
+}
