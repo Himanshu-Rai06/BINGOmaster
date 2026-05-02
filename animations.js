@@ -162,76 +162,112 @@ const Visuals = {
 
     // --- 8. THEME SWITCH (GRENADE EXPLOSION STYLE) ---
     animateThemeSwitch: (themeName, originElement) => {
+        if (Visuals.isAnimating) return; 
+        Visuals.isAnimating = true;
+
         const body = document.body;
         
-        // 1. Get Origin Coordinates (Where the "grenade" comes from)
+        // 1. Get exact coordinates of the clicked dot
         const rect = originElement.getBoundingClientRect();
         const startX = rect.left + rect.width / 2;
         const startY = rect.top + rect.height / 2;
         
-        // 2. Create the "Grenade"
-        const grenade = document.createElement('div');
-        grenade.style.position = 'fixed';
-        grenade.style.left = startX + 'px';
-        grenade.style.top = startY + 'px';
-        grenade.style.width = '20px';
-        grenade.style.height = '20px';
-        grenade.style.borderRadius = '50%';
-        grenade.style.zIndex = '9999';
-        
-        // Set grenade color based on target theme
+        // 2. Calculate how large the circle needs to be to cover the whole screen
+        const maxRadius = Math.hypot(
+            Math.max(startX, window.innerWidth - startX),
+            Math.max(startY, window.innerHeight - startY)
+        );
+
+        // Define our theme colors
         const colors = {
             'theme-peach': '#ff9a9e',
             'theme-midnight': '#0f172a',
             'theme-sage': '#9caf88'
         };
-        grenade.style.backgroundColor = colors[themeName];
-        grenade.style.boxShadow = `0 0 10px ${colors[themeName]}`;
-        document.body.appendChild(grenade);
+        const targetColor = colors[themeName] || '#333';
 
-        // 3. THROW ANIMATION (Arc to Center)
-        const timeline = anime.timeline({
-            easing: 'easeOutQuad'
+        // 3. Create the Main Liquid Ripple
+        const ripple = document.createElement('div');
+        Object.assign(ripple.style, {
+            position: 'fixed',
+            left: `${startX}px`,
+            top: `${startY}px`,
+            width: '2px',
+            height: '2px',
+            borderRadius: '50%',
+            backgroundColor: targetColor,
+            zIndex: '9998',
+            pointerEvents: 'none',
+            transform: 'translate(-50%, -50%)' // Keeps it centered on the click
+        });
+        
+        // 4. Create a "Glossy Shine" that leads the wave
+        const splash = document.createElement('div');
+        Object.assign(splash.style, {
+            position: 'fixed',
+            left: `${startX}px`,
+            top: `${startY}px`,
+            width: '2px',
+            height: '2px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(255, 255, 255, 0.6)',
+            zIndex: '9999',
+            pointerEvents: 'none',
+            transform: 'translate(-50%, -50%)',
+            boxShadow: '0 0 50px rgba(255,255,255,0.8)'
         });
 
-        timeline
-        .add({
-            targets: grenade,
-            left: window.innerWidth / 2 - 10, // Center X (minus half width)
-            top: window.innerHeight / 2 - 10, // Center Y
-            width: 40,  // Grow slightly while flying
-            height: 40,
-            rotate: 720, // Spin like a throwable
-            duration: 600,
-            easing: 'easeInBack' // Pull back then shoot
-        })
-        // 4. EXPLOSION (Screen Fill)
-        .add({
-            targets: grenade,
-            scale: 60, // Massive expansion covering screen
-            opacity: 1,
-            duration: 500,
-            easing: 'easeOutExpo',
+        body.appendChild(ripple);
+        body.appendChild(splash);
+
+        // 5. Immersive Board Reaction (Tilts away from the wave)
+        anime({
+            targets: '.glass-panel',
+            scale: [1, 0.95, 1],
+            translateY: [0, -10, 0],
+            duration: 900,
+            easing: 'easeInOutQuad'
+        });
+
+        // 6. The Animation Timeline
+        const tl = anime.timeline({
             complete: () => {
-                // 5. CHANGE ACTUAL THEME (Hidden behind the explosion)
+                ripple.remove();
+                splash.remove();
+                Visuals.isAnimating = false;
+            }
+        });
+
+        // Step A: The white glossy splash bursts outward and fades
+        tl.add({
+            targets: splash,
+            width: maxRadius * 2,
+            height: maxRadius * 2,
+            opacity: [1, 0],
+            duration: 800,
+            easing: 'easeOutCirc'
+        }, 0);
+
+        // Step B: The main color washes over the screen right behind the splash
+        tl.add({
+            targets: ripple,
+            width: maxRadius * 2.5,
+            height: maxRadius * 2.5,
+            duration: 900,
+            easing: 'easeInOutSine',
+            complete: () => {
+                // Once the screen is covered, silently swap the real background theme
                 body.classList.remove('theme-sage', 'theme-midnight', 'theme-peach');
                 body.classList.add(themeName);
-                
-                // Spin background pattern for extra effect
-                anime({
-                    targets: '.bg-pattern-layer',
-                    rotate: '+=180deg',
-                    duration: 2000
-                });
             }
-        })
-        // 6. FADE OUT THE EXPLOSION
-        .add({
-            targets: grenade,
+        }, 50);
+
+        // Step C: Fade out the ripple overlay to reveal the new theme
+        tl.add({
+            targets: ripple,
             opacity: 0,
-            duration: 400,
-            easing: 'linear',
-            complete: () => grenade.remove() // Cleanup
+            duration: 500,
+            easing: 'linear'
         });
     },
 

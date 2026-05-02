@@ -13,14 +13,16 @@
 body {
     font-family: var(--font-main);
     height: 100vh;
-    width: 100vw;
+    width: 100%;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0;
     background-color: var(--bg-color);
     color: var(--text);
     transition: background-color 0.8s ease, color 0.5s ease;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Background Animation Layer */
@@ -106,26 +108,33 @@ body {
    ========================================= */
 
 .glass-panel {
-    width: 90%; 
+    margin: auto;
+    width: 90%;
     max-width: 400px;
-    /* Removed min-height so it doesn't force whitespace */
     height: auto;
-    
-    display: flex; 
+    max-height: 95vh;
+    display: flex;
     flex-direction: column;
-    
     background: var(--glass-bg);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: var(--glass-border);
     border-radius: 24px;
-    padding: 25px;
+    padding: 20px;
     box-shadow: var(--glass-shadow);
-    
     position: relative;
     z-index: 2;
-    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     transition: all 0.5s ease;
+}
+
+.glass-panel::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+.glass-panel {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 /* =========================================
@@ -202,7 +211,7 @@ body {
 /* Main Menu Screen */
 #view-home {
     justify-content: center;
-    padding: 20px 0;
+    padding:20px 0;
 }
 
 /* Game Screen */
@@ -306,6 +315,48 @@ input:focus { border-color: var(--primary); background: rgba(255,255,255,0.9); }
     display: none !important;
 }
 
+.btn.disabled,
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 520px) {
+    .glass-panel {
+        width: min(98%, 420px);
+        padding: 18px;
+        max-height: calc(100vh - 30px);
+    }
+
+    .panel-header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .theme-toggles {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn {
+        font-size: 0.95rem;
+        padding: 12px;
+    }
+
+    .grid-container {
+        gap: 4px;
+    }
+
+    .tile {
+        font-size: 0.9rem;
+    }
+
+    .turn-indicator {
+        font-size: 0.95rem;
+    }
+}
+
 /* Animations */
 @keyframes spinSlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 @keyframes drift { 0% { background-position: 0 0, 0 0; } 100% { background-position: 1000px 500px, 400px 600px; } }
@@ -358,6 +409,7 @@ input:focus { border-color: var(--primary); background: rgba(255,255,255,0.9); }
 .rainbow-text {
     background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
     background-size: 400%;
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: rainbow 10s linear infinite;
@@ -371,26 +423,10 @@ input:focus { border-color: var(--primary); background: rgba(255,255,255,0.9); }
     100% { background-position: 400% 50%; }
 }
 
-/* Update your .screen class */
 .screen {
-    /* ... your existing layout styles ... */
-    
-    /* NEW STYLES FOR ANIMATION */
+
     background: var(--surface);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px); /* Glass effect */
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    
-    /* Ensure the explosion doesn't get clipped */
-    overflow: visible; 
-    transform-style: preserve-3d;
-    will-change: transform, opacity;
+
 }
 
-/* Ensure the grenade doesn't trigger scrollbars */
-body {
-    overflow-x: hidden;
-    /* ... existing styles ... */
-}

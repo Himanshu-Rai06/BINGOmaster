@@ -128,10 +128,10 @@ const app = {
         app.navigate('screen-config');
     },
 
-    toggleOnlineTab: (tab) => {
+    toggleOnlineTab: (tab, event) => {
         state.onlineRole = tab;
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active'); // Assumes event is global or passed
+        if (event && event.currentTarget) event.currentTarget.classList.add('active');
         document.getElementById('tab-create').style.display = tab === 'create' ? 'block' : 'none';
         document.getElementById('tab-join').style.display = tab === 'join' ? 'block' : 'none';
     },
@@ -218,7 +218,8 @@ const app = {
         const btn = document.getElementById('btn-start-online');
         if (state.onlineRole === 'create') {
             btn.style.display = 'block';
-            btn.classList.toggle('disabled', count < 2); // Needs at least 2
+            btn.disabled = count < 2;
+            btn.classList.toggle('disabled', count < 2);
             document.getElementById('lobby-msg').innerText = count < 2 ? "Waiting for players..." : "Ready to Start!";
         } else {
             btn.style.display = 'none';
@@ -332,10 +333,6 @@ const game = {
         if (state.mode === 'ONLINE') {
             const myRef = window.dbRef(window.db, `rooms/${state.roomCode}/players/${state.playerId}`);
             window.dbUpdate(myRef, { ready: true });
-            
-            if (state.onlineRole === 'create') {
-                window.dbUpdate(window.dbRef(window.db, `rooms/${state.roomCode}`), { status: 'playing' });
-            }
             game.startOnlineListeners();
         } 
         
@@ -359,6 +356,9 @@ const game = {
     },
 
     startOnlineGame: () => {
+        if (state.onlineRole !== 'create') return;
+        const count = state.players.length;
+        if (count < 2) return alert('Need at least 2 players to start the match.');
         window.dbUpdate(window.dbRef(window.db, `rooms/${state.roomCode}`), { status: 'playing' });
     },
 
