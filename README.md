@@ -1,3 +1,4 @@
+<img width="1050" height="874" alt="bingogif" src="https://github.com/user-attachments/assets/489330bb-395f-48e5-9aba-bcbc41b211f1" />
 <div align="center">
 
 # 🎱 BINGO Master
@@ -19,7 +20,7 @@
 
 ## ✨ Overview
 
-**BINGO Master** is not just a digital bingo board — it’s a highly interactive, visually rich experience designed with a modern **Glassmorphism UI**.
+**BINGO Master** is a digital bingo board which is highly interactive, have visually rich experience designed with a modern **Glassmorphism UI**.
 
 Whether you're:
 
@@ -27,7 +28,7 @@ Whether you're:
 * Competing offline with friends 📱
 * Or hosting real-time online matches 🌐
 
-…the game feels dynamic, responsive, and alive.
+…the game feels dynamic, smooth, and alive.
 
 ---
 
@@ -36,7 +37,7 @@ Whether you're:
 ### 🎮 Multiple Game Modes
 
 * **Solo Mode:** Play against up to 3 smart bots
-* **Offline Mode (2P):** Pass-and-play or play side-by-side
+* **Offline Mode (2P):** Play side-by-side
 * **Online Multiplayer:** Create rooms and play globally using a 4-digit code
 
 ### 💧 Dynamic Theme Engine
@@ -70,7 +71,7 @@ A sleek floating-card layout that works seamlessly across:
 
 <div align="center">
 
-<img width="880" height="770" alt="Gameplay Preview" src="https://github.com/user-attachments/assets/112eabc7-ceff-4cf4-911d-7bc4545143c4" />
+<img width="1050" height="874" alt="bingogif" src="https://github.com/user-attachments/assets/1274ac7e-69e1-4691-8985-b84c1ae1997c" />
 
 </div>
 
@@ -145,11 +146,11 @@ Then:
 * Click a number to mark it
 * In online mode, moves sync in real-time
 
-Complete 5 tiles in a row:
+Complete 5 tiles:
 
-* Horizontal
-* Vertical
-* Diagonal
+* Horizontally
+* Vertically
+* Diagonally
 
 This lights up letters in **B I N G O**
 
@@ -183,7 +184,6 @@ The game automatically detects the win and declares the **Bingo Master** 🎉
 * Voice chat for multiplayer 🎙️
 * Leaderboards 🏆
 * Custom board sizes 🔢
-* AI difficulty levels 🤖
 
 ---
 
@@ -195,6 +195,6 @@ Contributions are welcome! Feel free to fork the repo and submit a pull request.
 
 <div align="center">
 
-**Made with ❤️ by Himanshu Rai**
+**A Silly Game Made by Himanshu Rai**
 
 </div>
