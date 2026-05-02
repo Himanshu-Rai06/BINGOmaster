@@ -204,6 +204,8 @@ body {
     width: 100%;
     align-items: center;
     animation: fadeUp 0.4s var(--ease-elastic);
+    background: var(--surface);
+    border: none;
 }
 
 .screen.active { display: flex; }
@@ -423,10 +425,4 @@ input:focus { border-color: var(--primary); background: rgba(255,255,255,0.9); }
     100% { background-position: 400% 50%; }
 }
 
-.screen {
-
-    background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-
-}
 
