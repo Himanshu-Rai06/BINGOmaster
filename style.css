@@ -75,7 +75,7 @@ body {
     --glass-border: 1px solid rgba(255, 255, 255, 0.1);
     --glass-shadow: 0 0 50px rgba(0,0,0,0.8);
 
-    --primary: #6366f1; 
+    --primary: #D4AF37; 
     --accent: #a855f7;
     --text: #f8fafc;
     
@@ -376,53 +376,105 @@ input:focus { border-color: var(--primary); background: rgba(255,255,255,0.9); }
 }
 
 /* Modal Styling */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@300;400;500&display=swap');
+
+#confetti-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .modal {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    display: none; /* Hidden by default */
+    inset: 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+
     opacity: 0;
-    transition: opacity 0.3s ease;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
 }
 
 .modal.show {
-    display: flex;
     opacity: 1;
+    pointer-events: all;
 }
 
 .modal-card {
-    background: var(--surface);
-    padding: 40px;
-    border-radius: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    padding: 50px 40px;
+    border-radius: 16px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    transform: scale(0.8);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 320px;
+
+    transform: translateY(20px) scale(0.96);
+    opacity: 0;
+
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .modal.show .modal-card {
-    transform: scale(1);
+    transform: translateY(0) scale(1);
+    opacity: 1;
 }
 
-.rainbow-text {
-    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-    background-size: 400%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: rainbow 10s linear infinite;
-    font-size: 3rem;
-    font-weight: 900;
-    margin-bottom: 20px;
+/* Label (small text above title) */
+.result-label {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 10px;
 }
 
-@keyframes rainbow {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 400% 50%; }
+/* Main title */
+.result-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #f5f5f5;
+
+    /* subtle glow instead of rainbow */
+    text-shadow: 0 0 20px rgba(255,255,255,0.15);
+
+    margin-bottom: 25px;
 }
 
+/* Winner text */
+.score-list p {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 30px;
+}
 
+/* Button */
+.btn {
+    background: rgba(255,255,255,0.08);
+    color: var(--primary);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 12px 20px;
+    border-radius: 10px;
+
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-1px);
+}

@@ -134,14 +134,17 @@
 
     </div> 
 
-<div id="result-modal" class="modal">
-    <div class="modal-card">
-        <h1 class="rainbow-text">BINGO!</h1>
-        <div id="final-scores" class="score-list" style="margin-bottom:20px;">
-            </div>
-        <button class="btn" onclick="app.goHome()">Back to Menu</button>
+    <div id="result-modal" class="modal">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="modal-card">
+            <p class="result-label">Victory</p>
+            <h1 class="result-title">BINGO</h1>
+
+            <div id="final-scores" class="score-list"></div>
+
+            <button class="btn" onclick="app.goHome()">Back to Menu</button>
+        </div>
     </div>
-</div>
 
 
     <script type="module">

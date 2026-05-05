@@ -546,15 +546,71 @@ const game = {
     },
 
     showResults: (winnerName) => {
-        document.getElementById('result-modal').classList.add('show');
-        // Simple confetti or rainbow text is handled by CSS/HTML
         document.getElementById('final-scores').innerHTML = `
-            <h2 style="font-size:3rem; margin-bottom:10px;">🏆</h2>
-            <p style="font-size:1.5rem;">${winnerName} Wins!</p>
+            <div class="win-player-label">Winner: ${winnerName}</div>
         `;
-    }
+        const modal = document.getElementById('result-modal');
+        modal.style.display = 'flex';
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => modal.classList.add('show'));
+        });
+        launchConfetti();
+    },
 };
 
 // Make accessible to HTML buttons
 window.app = app;
 window.game = game;
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#C9A84C', '#F5D478', '#e8ecf8', '#4a6fa5', '#F7E8B0'];
+  const pieces = Array.from({ length: 90 }, () => ({
+    x: Math.random() * canvas.width,
+    y: -10 - Math.random() * 200,
+    r: 3 + Math.random() * 4,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    speed: 1.5 + Math.random() * 3,
+    drift: (Math.random() - 0.5) * 1.5,
+    spin: (Math.random() - 0.5) * 0.15,
+    angle: Math.random() * Math.PI * 2,
+    shape: Math.random() > 0.5 ? 'rect' : 'circle',
+    w: 5 + Math.random() * 7,
+    h: 3 + Math.random() * 4,
+    opacity: 0.7 + Math.random() * 0.3,
+  }));
+
+  let frame;
+  let tick = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.y += p.speed;
+      p.x += p.drift;
+      p.angle += p.spin;
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      if (p.shape === 'rect') {
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    });
+    tick++;
+    if (tick < 260) frame = requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  cancelAnimationFrame(frame);
+  draw();
+}
